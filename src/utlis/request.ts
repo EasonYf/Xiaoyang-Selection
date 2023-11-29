@@ -1,3 +1,4 @@
+import useUserStore from "@/store/modules/user";
 import axios from "axios";
 import { ElMessage } from "element-plus";
 
@@ -12,11 +13,15 @@ const request = axios.create({
 
 //请求拦截器
 request.interceptors.request.use((config) => {
+  //登录成功后将获取的token值加到请求头中，获取用户信息
+  let userStore = useUserStore()
+  if(userStore.token){
+    config.headers.token = userStore.token
+  }
   return config;
 });
 
 //响应拦截器
-
 request.interceptors.response.use(
   (response) => {
     //简化Axios的数据

@@ -32,5 +32,9 @@ defineProps({
   }
 });
 </script>
-
+<script lang="ts">
+export default {
+  name:'Svg'
+}
+</script>
 <style scoped></style>

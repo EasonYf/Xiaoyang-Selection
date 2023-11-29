@@ -14,15 +14,21 @@ import setting from '@/setting';
   width: $base-menu-width;
   display: flex;
   color: #fff;
+  position: relative;
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  height: 40px;
+  
   font-size: 26px;
   white-space: nowrap;
+  position: relative;
   img {
+    position: fixed;
+    left: 10px;
     width: 40px;
     height: 40px;
-    transform: translateX(-50%);
+    background-size: cover;
   }
 }
 </style>

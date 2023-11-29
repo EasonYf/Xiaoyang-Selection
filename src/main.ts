@@ -4,8 +4,6 @@ import ElementPlus from "element-plus";
 //@ts-ignore忽略当前文件ts类型的检测否则有红色提示(打包会失败)
 import zhCn from "element-plus/dist/locale/zh-cn.mjs";
 import "element-plus/dist/index.css";
-//引入axios
-import axios from "axios"
 //svg需要的配置代码
 import 'virtual:svg-icons-register'
 import GloablComponent from '@/components/index'
@@ -13,6 +11,8 @@ import GloablComponent from '@/components/index'
 import '@/styles/index.scss'
 import router from "./router";
 import pinia from "./store";
+// 引入路由鉴权
+import '@/permission'
 //引入pinia仓库
 //引入router
 const app = createApp(App);

@@ -6,7 +6,7 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 const allGloablComponent = { SvgIcon };
 
 //对外暴露插件对象
-console.log(allGloablComponent);
+// console.log(allGloablComponent);
 
 export default {
   //务必使用install
@@ -14,8 +14,6 @@ export default {
     //注册项目全部的全局组件
     Object.keys(allGloablComponent).forEach((key) => {
       app.component(key, allGloablComponent[key]);
-      console.log(key);
-      
     });
     //将element-plus图标注册为全局组件
     for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

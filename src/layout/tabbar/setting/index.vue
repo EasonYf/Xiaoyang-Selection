@@ -16,21 +16,19 @@
         <Setting />
       </el-icon>
     </el-button>
-    <el-avatar icon="UserFilled" :size="40" />
+    <el-avatar icon="UserFilled" :size="40" :src="userStore.avatar"/>
     <el-dropdown>
       <span class="el-dropdown-link">
-        Dropdown List
+       {{userStore.username}}
         <el-icon class="el-icon--right">
           <arrow-down />
         </el-icon>
       </span>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item>Action 1</el-dropdown-item>
-          <el-dropdown-item>Action 2</el-dropdown-item>
-          <el-dropdown-item>Action 3</el-dropdown-item>
-          <el-dropdown-item disabled>Action 4</el-dropdown-item>
-          <el-dropdown-item divided>Action 5</el-dropdown-item>
+          <el-dropdown-item>
+            <el-button @click="loginOut">退出登录</el-button>
+          </el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -39,8 +37,14 @@
 
 <script setup lang="ts">
 import useLayOutSettingStore from '@/store/modules/setting/setting'
+import useUserStore from '@/store/modules/user';
+import { useRoute , useRouter} from 'vue-router';
 
 let LauOutSettingStore = useLayOutSettingStore()
+let userStore = useUserStore()
+let $router = useRouter()
+let $route = useRoute()
+
 
 // 刷新按钮点击的回调
 const settingRefresh = () => {
@@ -56,6 +60,20 @@ const fullScreen = () => {
     //如果是全面，调用exitFullScreen方法，退出全面
     document.exitFullscreen()
   }
+}
+
+//退出登录的回调
+const loginOut = () => {
+  //第一步：向服务器发送退出登录请求
+  //第二步：仓库中与用户相关的数据清空
+  //第三步：跳转login路由
+  userStore.userLoginOut()
+  $router.push({
+    path:'/login',
+    query:{
+      redirect: $route.path
+    }
+  })
 }
 </script>
 <script lang="ts">

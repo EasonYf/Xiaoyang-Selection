@@ -7,3 +7,8 @@ export const SET_TOKEN = (token:string | null) => {
 export const GET_TOKEN = () => {
   return localStorage.getItem('TOKEN')
 }
+
+//清除本地存储的token
+export const CLEAR_TOKEN = () => {
+  localStorage.clear()
+}
