@@ -34,13 +34,13 @@ export default defineConfig(({ command, mode }) => {
         },
       },
     },
-    // 配置代理服务器
+    // 代理跨域
     server: {
       proxy: {
         [env.VITE_APP_BASE_API]: {
-          target: "http://jsonplaceholder.typicode.com",
+          target: env.VITE_SERVE,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/, ""),
+          rewrite: (path) => path.replace(/^\/api/,''),
         },
       },
     },

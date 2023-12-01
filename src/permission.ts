@@ -37,7 +37,7 @@ router.beforeEach(async (to, from, next) => {
           //token过期：获取不到用户信息
           //用户手动修改本地token
           //退出登录
-          userStore.userLoginOut()
+          await userStore.userLoginOut()
           next({path:'/login',query:{redirect:to.path}})
         }
       }

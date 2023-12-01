@@ -26,11 +26,11 @@
 import { User,Lock} from '@element-plus/icons-vue'
 import { reactive , ref} from 'vue';
 import { useRouter , useRoute} from 'vue-router';
-import useUserStore from '@/store/modules/user.js'
+import useUserStore from '@/store/modules/user'
 import { ElNotification } from 'element-plus'
 import {getTime} from '@/utlis/getTime'
 
-const loginForm = reactive({username:'admin',password:'111111'})
+const loginForm = reactive({username:'admin',password:'atguigu123'})
 let userStore = useUserStore();
 //获取路由器对象
 let $router = useRouter()
@@ -118,4 +118,3 @@ const loginRule = {
   }
 }
 </style>
-@/store/modules/user

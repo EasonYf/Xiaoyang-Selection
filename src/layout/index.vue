@@ -41,8 +41,10 @@ import Tabbar from "@/layout/tabbar/index.vue";
 import { useRoute } from "vue-router";
 import useLayOutSettingStore from "@/store/modules/setting/setting";
 let settingStore = useLayOutSettingStore();
+
 let $route = useRoute();
 let userStore = useUserStore();
+
 
 </script>
 <script lang="ts">
@@ -82,6 +84,7 @@ export default {
     width: calc(100% - $base-menu-width);
     height: $base-nav-height;
     transition: all 0.5s;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
     &.flod {
       width: calc(100vw - $base-menu-min-width);
       left: $base-menu-min-width;
@@ -94,7 +97,7 @@ export default {
     top: $base-nav-height;
     width: calc(100% - $base-menu-width);
     height: calc(100vh - $base-nav-height);
-    background-color: aquamarine;
+
     padding: 20px;
     overflow: auto;
     transition: all 0.5s;

@@ -9,11 +9,10 @@
 //::-webkit-scrollbar-track 表示滚动轨道
 
 ::-webkit-scrollbar-track {
-  background-color:$base-menu-bg-color;
+  background-color:#fff;
 }
 //::-webkit-scrollbar-thumb 表示滚动滑块
 
 ::-webkit-scrollbar-thumb {
-  background-color: antiquewhite;
-  
+  background-color: rgba(0,0,0,0.1);
 }
