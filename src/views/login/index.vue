@@ -37,7 +37,7 @@ let $router = useRouter()
 //获取路由对象
 let $route = useRoute()
 const redirect:any = $route.query.redirect
-let loading = ref(false)
+let loading = ref<boolean>(false)
 let loginFormRef = ref()
 //用户登录
 const Login = async() => {
