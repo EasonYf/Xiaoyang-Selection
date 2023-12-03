@@ -8,7 +8,7 @@ const request = axios.create({
   //基地址
   baseURL: import.meta.env.VITE_APP_BASE_API,
   //请求限制事件，超过这个时间请求失败
-  timeout: 5000,
+  // timeout: 5000,
 });
 
 //请求拦截器

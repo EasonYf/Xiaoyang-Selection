@@ -69,6 +69,7 @@ export const constantRoute = [
       hidden: false,
       icon: "Lock",
     },
+    redirect: "/acl/user",
     children: [
       {
         //user权限
@@ -115,16 +116,8 @@ export const constantRoute = [
       hidden: false,
       icon: "ShoppingCart",
     },
+    redirect: "/product/trademark",
     children: [
-      {
-        path: "/product/attr",
-        component: () => import("@/views/product/attr/index.vue"),
-        name: "Attr",
-        meta: {
-          title: "商品管理",
-          icon: "Goods",
-        },
-      },
       {
         path: "/product/trademark",
         component: () => import("@/views/product/trademark/index.vue"),
@@ -132,6 +125,15 @@ export const constantRoute = [
         meta: {
           title: "品牌管理",
           icon: "ShoppingCartFull",
+        },
+      },
+      {
+        path: "/product/attr",
+        component: () => import("@/views/product/attr/index.vue"),
+        name: "Attr",
+        meta: {
+          title: "属性管理",
+          icon: "Goods",
         },
       },
       {
