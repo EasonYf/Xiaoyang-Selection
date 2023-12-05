@@ -17,8 +17,6 @@ watch(() => LayOutSettingStore.refresh,()=>{
   flag.value = false
   nextTick(() => {
     flag.value = true
-    console.log(111);
-    
   })
 })
 </script>
