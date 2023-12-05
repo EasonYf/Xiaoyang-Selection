@@ -44,7 +44,10 @@
                 @click="updateAttr(row)"
               ></el-button>
               <!-- 删除功能的气泡弹窗 -->
-              <el-popconfirm title="Are you sure to delete this?" @confirm="removeAttr(row.id)">
+              <el-popconfirm
+                title="Are you sure to delete this?"
+                @confirm="removeAttr(row.id)"
+              >
                 <template #reference>
                   <el-button
                     type="danger"
@@ -142,7 +145,7 @@ import type {
   AttrValue,
   ResponseData,
 } from "@/api/product/attr/type";
-import { watch, ref, reactive, nextTick } from "vue";
+import { watch, ref, reactive, nextTick, onBeforeUnmount } from "vue";
 import useCategoryStore from "@/store/modules/category/category";
 import { ElMessage } from "element-plus";
 
@@ -316,6 +319,10 @@ const removeAttr = async (id: number) => {
     });
   }
 };
+//在组件销毁之前清空cateStore里面的数据
+onBeforeUnmount(()=>{
+  categoryStore.$reset()
+})
 </script>
 <script lang="ts">
 export default {
