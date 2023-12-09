@@ -1,12 +1,13 @@
 //spu模块相关的请求接口定义
 import request from "@/utlis/request";
 //引入类型
-import {
+import type {
   HasSpuResponseData,
   AllTrademark,
   SpuHasImg,
   SaleAttrResponseData,
-  HasSaleAttrResponseData
+  HasSaleAttrResponseData,
+  SpuData,
 } from "./type";
 enum API {
   //获取已有spu的数据
@@ -18,7 +19,11 @@ enum API {
   //获取某一个spu下全部已有的销售属性的数据
   SPUHASSALETTR_URL = "/admin/product/spuSaleAttrList/",
   //获取整个项目的销售属性的数据
-  ALLSALEATTR_URL="/admin/product/baseSaleAttrList"
+  ALLSALEATTR_URL = "/admin/product/baseSaleAttrList",
+  //添加一个spu
+  ADDSPU_URL = "/admin/product/saveSpuInfo",
+  //更新一个spu
+  UPDATESPU_URL = "/admin/product/updateSpuInfo",
 }
 
 //获取spu列表数据的请求接口
@@ -45,4 +50,17 @@ export const reqSpuHasSaleAttList = (spuId: number) =>
   request.get<any, SaleAttrResponseData>(API.SPUHASSALETTR_URL + spuId);
 
 //获取整个项目的销售属性的请求接口
-export const reqAllSaleAttr = () => request.get<any,HasSaleAttrResponseData>(API.ALLSALEATTR_URL)
+export const reqAllSaleAttr = () =>
+  request.get<any, HasSaleAttrResponseData>(API.ALLSALEATTR_URL);
+
+//添加一个spu
+//更新一个spu的共用接口
+export const reqAddOrUpdateSpu = (data: SpuData) => {
+  if (data.id) {
+    //如果id存在即更新一个spu
+    return request.post<any, any>(API.UPDATESPU_URL, data);
+  } else {
+    //如果不存在id即新增一个spu
+    return request.post<any, any>(API.ADDSPU_URL, data);
+  }
+};

@@ -31,9 +31,14 @@
                 icon="Plus"
                 size="small"
                 title="添加"
-                @click="changeScene(1,row)"
+                @click="changeScene(1)"
               ></el-button>
-              <el-button type="warning" icon="Edit" size="small"></el-button>
+              <el-button
+                type="warning"
+                icon="Edit"
+                size="small"
+                @click="updateSpu(row)"
+              ></el-button>
               <el-button type="info" icon="Plus" size="small"></el-button>
               <!-- 删除功能的气泡弹窗 -->
               <el-popconfirm title="Are you sure to delete this?">
@@ -62,7 +67,11 @@
       </div>
 
       <!-- 添加SPU和修改spu的组件 -->
-      <AddSpu v-show="scene == 1" ref="addSpuRef" @changeScene="changeScene"></AddSpu>
+      <AddSpu
+        v-show="scene == 1"
+        ref="addSpuRef"
+        @changeScene="changeScene"
+      ></AddSpu>
       <!-- 添加sku的组件 -->
       <AddSku v-show="scene == 2"></AddSku>
     </el-card>
@@ -72,11 +81,12 @@
 <script setup lang="ts">
 import Category from "@/components/Category/index.vue";
 //引入类型
-import { HasSpuResponseData, Records } from "@/api/product/spu/type";
+import { HasSpuResponseData, Records, SpuData } from "@/api/product/spu/type";
 import { reqSPUList } from "@/api/product/spu/index";
 import { ref, watch } from "vue";
 import AddSpu from "./spuForm.vue";
 import AddSku from "./skuForm.vue";
+
 //引入仓库
 import useCategoryStore from "@/store/modules/category/category";
 //使用仓库
@@ -94,7 +104,7 @@ let total = ref<number>(0);
 let records = ref<Records>([]);
 
 //获取AddSpu组件的组件实例vc
-let addSpuRef = ref()
+let addSpuRef = ref();
 //当当前页面发生改变时的回调
 const handleSizeChange = () => {
   //调用获取已有spu数据的方法
@@ -132,11 +142,18 @@ const getSpu = async () => {
 };
 
 //控制场景的切换的函数
-const changeScene = (temp:number,row:any)=> {
+const changeScene = (temp: number) => {
+  //切换场景
+  scene.value = temp;
+};
+
+//修改spu的回调
+const updateSpu = (row:SpuData) => {
   //调用子组件中的方法，获取完整的spu数据
-  addSpuRef.value.getAllSpu(row)
-  scene.value = temp
-}
+  addSpuRef.value.initHasSpuData(row);
+  //切换显示AddSpu组件
+  changeScene(1)
+};
 </script>
 <script lang="ts">
 export default {
