@@ -114,7 +114,9 @@
       </el-table>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="save">保存</el-button>
+      <el-button type="primary" @click="save" :disabled="!saleAttrs.length"
+        >保存</el-button
+      >
       <el-button type="primary" @click="cancel">取消</el-button>
     </el-form-item>
   </el-form>
@@ -126,6 +128,7 @@ import {
   reqSpuImage,
   reqSpuHasSaleAttList,
   reqAllSaleAttr,
+  reqAddOrUpdateSpu,
 } from "@/api/product/spu/index";
 import type {
   AllTrademark,
@@ -139,11 +142,11 @@ import type {
   SpuData,
 } from "@/api/product/spu/type";
 import { ElMessage, UploadUserFile } from "element-plus";
-
 import { ref, computed, nextTick } from "vue";
-import { reqAddOrUpdateSpu } from "@/api/product/spu/index";
+import  useCategoryStore  from "@/store/modules/category/category";
 const $emit = defineEmits(["changeScene"]);
-
+//使用仓库
+let categoryStore = useCategoryStore();
 //存放所有品牌的数据
 let allTrademark = ref<Trademark[]>([]);
 //存放某一个spu下的所有在售商品图片的数据数组
@@ -335,7 +338,7 @@ const save = async () => {
   //发送请求
   const result = await reqAddOrUpdateSpu(SpuParams.value);
   console.log(result);
-  
+
   if (result.code == 200) {
     ElMessage({
       type: "success",
@@ -351,9 +354,35 @@ const save = async () => {
   $emit("changeScene", 0);
   //重新获取展示已有spu列表的请求
 };
+//添加一个新的spu的初始化函数
+const initAddSpu = async () => {
+  //清空之前的数据
+  Object.assign(SpuParams.value, {
+    id:"",
+    spuName: "",
+    description: "",
+    category3Id: "",
+    tmId: "",
+    spuSaleAttrList: [],
+    spuImageList: [],
+    spuPosterList: null,
+  });
+  //清空spuImageList和spuSaleAttrList
+  spuImgs.value = [];
+  saleAttrs.value = [];
+  //保存选择的三级分类ID
+  SpuParams.value.category3Id = categoryStore.select_Category3_Id;
+  //获取全部品牌和全部属性的数据
+  const allTrademarks: AllTrademark = await reqAllTrademark();
+  allTrademark.value = allTrademarks.data;
+  //获取项目中所有的销售属性
+  const allSaleAttrList: HasSaleAttrResponseData = await reqAllSaleAttr();
+  allSaleAttr.value = allSaleAttrList.data;
+};
 //暴露
 defineExpose({
   initHasSpuData,
+  initAddSpu,
 });
 </script>
 <script lang="ts">

@@ -299,7 +299,6 @@ const updateAttr = (row: Attr) => {
   //使用Objec中的assign方法合并数组
   //利用JSON.parse(JSON.stringify())实现深拷贝
   Object.assign(attrParams, JSON.parse(JSON.stringify(row)));
-  console.log(row);
 };
 
 //删除属性的回调

@@ -9,7 +9,7 @@
         <el-button
           type="primary"
           icon="Plus"
-          @click="changeScene(1)"
+          @click="addSpu()"
           :disabled="categoryStore.select_Category3_Id ? false : true"
           >添加SPU</el-button
         >
@@ -30,16 +30,17 @@
                 type="primary"
                 icon="Plus"
                 size="small"
-                title="添加"
-                @click="changeScene(1)"
+                title="添加sku"
+                @click="addSku(row)"
               ></el-button>
               <el-button
                 type="warning"
                 icon="Edit"
                 size="small"
+                title="更新spu"
                 @click="updateSpu(row)"
               ></el-button>
-              <el-button type="info" icon="Plus" size="small"></el-button>
+              <el-button type="info" icon="InfoFilled" size="small"></el-button>
               <!-- 删除功能的气泡弹窗 -->
               <el-popconfirm title="Are you sure to delete this?">
                 <template #reference>
@@ -73,7 +74,7 @@
         @changeScene="changeScene"
       ></AddSpu>
       <!-- 添加sku的组件 -->
-      <AddSku v-show="scene == 2"></AddSku>
+      <AddSku v-show="scene == 2"  @changeScene="changeScene" ref="addSkuRef"></AddSku>
     </el-card>
   </div>
 </template>
@@ -105,6 +106,8 @@ let records = ref<Records>([]);
 
 //获取AddSpu组件的组件实例vc
 let addSpuRef = ref();
+//获取AddSku组件的组件实例vc
+let addSkuRef = ref()
 //当当前页面发生改变时的回调
 const handleSizeChange = () => {
   //调用获取已有spu数据的方法
@@ -145,6 +148,7 @@ const getSpu = async () => {
 const changeScene = (temp: number) => {
   //切换场景
   scene.value = temp;
+ 
 };
 
 //修改spu的回调
@@ -154,6 +158,22 @@ const updateSpu = (row:SpuData) => {
   //切换显示AddSpu组件
   changeScene(1)
 };
+
+//添加一个新的spu
+const addSpu = () => {
+  //调用spuForm中的添加新spu的初始化函数
+  addSpuRef.value.initAddSpu()
+  changeScene(1)
+  getSpu()
+}
+
+//添加Sku
+const addSku = (row:any) => {
+  //初始化sku模块的所有数据
+  addSkuRef.value.initSkuData(row)
+  //切换场景
+  changeScene(2)
+}
 </script>
 <script lang="ts">
 export default {
