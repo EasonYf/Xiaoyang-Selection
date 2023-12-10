@@ -40,9 +40,17 @@
                 title="更新spu"
                 @click="updateSpu(row)"
               ></el-button>
-              <el-button type="info" icon="InfoFilled" size="small"></el-button>
+              <el-button
+                type="info"
+                icon="InfoFilled"
+                size="small"
+                @click="viewSku(row.id)"
+              ></el-button>
               <!-- 删除功能的气泡弹窗 -->
-              <el-popconfirm title="Are you sure to delete this?">
+              <el-popconfirm
+                title="Are you sure to delete this?"
+                @confirm="removeSpu(row.id)"
+              >
                 <template #reference>
                   <el-button
                     type="danger"
@@ -66,7 +74,23 @@
           @current-change="handleCurrentChange"
         />
       </div>
-
+      <!-- sku展示的dialog -->
+      <el-dialog v-model="skuDialogVisible" title="SKU展示列表">
+        <el-table border :data="skuList">
+          <el-table-column label="SKU名字" prop="skuName"></el-table-column>
+          <el-table-column label="SKU描述" prop="skuDesc"></el-table-column>
+          <el-table-column label="SKU价格" prop="price"></el-table-column>
+          <el-table-column label="SKU重量" prop="weight"></el-table-column>
+          <el-table-column label="SKU图片">
+            <template #="{ row }">
+              <img
+                :src="row.skuDefaultImg"
+                style="width: 100px; height: 100px"
+              />
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-dialog>
       <!-- 添加SPU和修改spu的组件 -->
       <AddSpu
         v-show="scene == 1"
@@ -74,7 +98,11 @@
         @changeScene="changeScene"
       ></AddSpu>
       <!-- 添加sku的组件 -->
-      <AddSku v-show="scene == 2"  @changeScene="changeScene" ref="addSkuRef"></AddSku>
+      <AddSku
+        v-show="scene == 2"
+        @changeScene="changeScene"
+        ref="addSkuRef"
+      ></AddSku>
     </el-card>
   </div>
 </template>
@@ -83,13 +111,18 @@
 import Category from "@/components/Category/index.vue";
 //引入类型
 import { HasSpuResponseData, Records, SpuData } from "@/api/product/spu/type";
-import { reqSPUList } from "@/api/product/spu/index";
+import {
+  reqSPUList,
+  reqSkuInfoList,
+  reqRemoveSpu,
+} from "@/api/product/spu/index";
 import { ref, watch } from "vue";
 import AddSpu from "./spuForm.vue";
 import AddSku from "./skuForm.vue";
 
 //引入仓库
 import useCategoryStore from "@/store/modules/category/category";
+import { ElMessage } from "element-plus";
 //使用仓库
 let categoryStore = useCategoryStore();
 //控制切换已有的SPU展示表格和添加SPU表格
@@ -107,15 +140,20 @@ let records = ref<Records>([]);
 //获取AddSpu组件的组件实例vc
 let addSpuRef = ref();
 //获取AddSku组件的组件实例vc
-let addSkuRef = ref()
+let addSkuRef = ref();
+//控制sku的dialog的显示
+let skuDialogVisible = ref<boolean>(false);
+
+//获取的sku数据
+let skuList = ref([]);
 //当当前页面发生改变时的回调
 const handleSizeChange = () => {
   //调用获取已有spu数据的方法
   getSpu();
 };
 //当显示条数发生改变时的回调
-const handleCurrentChange = (pager = 1) => {
-  pageNo.value = pager;
+const handleCurrentChange = () => {
+ 
   //调用获取已有spu数据的方法
   getSpu();
 };
@@ -131,6 +169,7 @@ watch(
 );
 //获取已有的spu数据的回调
 const getSpu = async () => {
+
   //调用请求
   const result: HasSpuResponseData = await reqSPUList(
     pageNo.value,
@@ -148,32 +187,59 @@ const getSpu = async () => {
 const changeScene = (temp: number) => {
   //切换场景
   scene.value = temp;
- 
 };
 
 //修改spu的回调
-const updateSpu = (row:SpuData) => {
+const updateSpu = (row: SpuData) => {
   //调用子组件中的方法，获取完整的spu数据
   addSpuRef.value.initHasSpuData(row);
   //切换显示AddSpu组件
-  changeScene(1)
+  changeScene(1);
 };
 
 //添加一个新的spu
 const addSpu = () => {
   //调用spuForm中的添加新spu的初始化函数
-  addSpuRef.value.initAddSpu()
-  changeScene(1)
-  getSpu()
-}
+  addSpuRef.value.initAddSpu();
+  changeScene(1);
+  getSpu();
+};
 
 //添加Sku
-const addSku = (row:any) => {
+const addSku = (row: any) => {
   //初始化sku模块的所有数据
-  addSkuRef.value.initSkuData(row)
+  addSkuRef.value.initSkuData(row);
   //切换场景
-  changeScene(2)
-}
+  changeScene(2);
+};
+//查看某个spu下已有的sku数据
+const viewSku = async (spuId: number) => {
+  skuDialogVisible.value = true;
+
+  //发送请求获取sku列表
+  const result = await reqSkuInfoList(spuId);
+  if (result.code == 200) {
+    skuList.value = result.data;
+  }
+};
+//删除一个spu的回调
+const removeSpu = async (spuId: number) => {
+  //发送请求
+  const result = await reqRemoveSpu(spuId);
+  if (result.code == 200) {
+    ElMessage({
+      type: "success",
+      message: "删除成功",
+    });
+    //删除成功后重新获取spu列表数据
+    getSpu();
+  } else {
+    ElMessage({
+      type: "error",
+      message: "删除失败",
+    });
+  }
+};
 </script>
 <script lang="ts">
 export default {

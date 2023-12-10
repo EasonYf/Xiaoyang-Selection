@@ -46,7 +46,7 @@
 
 <script setup lang="ts">
 import useCategoryStore from "@/store/modules/category/category";
-import { onMounted } from "vue";
+import { onMounted , onBeforeUnmount} from "vue";
 //使用仓库
 const categoryStore = useCategoryStore();
 //接收父组件传递过来的值
@@ -71,6 +71,10 @@ onMounted(() => {
   //调用获取一级分类请求
   categoryStore.getCategory1();
 });
+//当组件销毁前清空仓库数据
+onBeforeUnmount(()=>{
+  categoryStore.$reset()
+})
 </script>
 <script lang="ts">
 export default {

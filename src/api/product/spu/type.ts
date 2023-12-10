@@ -97,6 +97,7 @@ export interface SaleAttr {
   spuId?: number;
   spuSaleAttrValueList: spuSaleAttrValueList;
   flag?: boolean;
+  saleAttrIdAndValueId?:string
 }
 //定义获取销售属性请求的返回值数据ts类型
 export interface SaleAttrResponseData extends ResponseData {
@@ -112,4 +113,31 @@ export interface HasSaleAttr {
 //定义请求销售属性对象的返回数据类型
 export interface HasSaleAttrResponseData extends ResponseData {
   data: HasSaleAttr[];
+}
+
+//定义SKU对象的类型
+export interface SkuData {
+  category3Id: string | number;
+  id?: number | string;
+  isSale?: number | string;
+  price: number ;
+  skuAttrValueList?: [
+    //平台属性的收集
+    {
+      attrId: string | number;
+      valueId: string | number;
+    },
+  ];
+  skuDefaultImg: string;
+  skuDesc: string;
+  skuName: string;
+  skuSaleAttrValueList?: [
+    {
+      saleAttrValueId: number|string;
+      saleAttrId: number|string;
+    },
+  ];
+  spuId: number | string;
+  tmId: number | string;
+  weight: number ;
 }
