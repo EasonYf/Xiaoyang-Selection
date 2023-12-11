@@ -55,7 +55,7 @@
               type="default"
               icon="InfoFilled"
               size="small"
-              @click="getDetails(row)"
+              @click="getDetails(row.id)"
             ></el-button>
             <el-button type="success" icon="EditPen" size="small"></el-button>
             <el-popconfirm
@@ -88,9 +88,32 @@
           <h4>SKU商品的详情展示</h4>
         </template>
         <template #default>
-          <el-table>
-            <el-table-column label="名称"></el-table-column>
-          </el-table>
+          <el-row style="margin: 20px 0">
+            <el-col :span="6">名称</el-col>
+            <el-col :span="18">{{skuInfo.skuName}}</el-col>
+          </el-row>
+          <el-row style="margin: 20px 0">
+            <el-col :span="6">描述</el-col>
+            <el-col :span="18">{{ skuInfo.skuDesc }}</el-col>
+          </el-row>
+          <el-row style="margin: 20px 0">
+            <el-col :span="6">平台属性</el-col>
+            <el-col :span="18"><el-tag v-for="item in skuInfo.skuAttrValueList" :key="item.id" style="margin: 5px;">{{ item.valueName }}</el-tag></el-col>
+          </el-row>
+          <el-row style="margin: 20px 0">
+            <el-col :span="6">销售属性</el-col>
+            <el-col :span="18"><el-tag type="danger" v-for="item in skuInfo.skuSaleAttrValueList" :key="item.id" style="margin: 5px;">{{ item.saleAttrValueName }}</el-tag></el-col>
+          </el-row>
+          <el-row style="margin: 20px 0">
+            <el-col :span="6">商品图片</el-col>
+            <el-col :span="18">
+              <el-carousel :interval="4000" type="card" height="200px">
+                <el-carousel-item v-for="item in skuInfo.skuImageList" :key="item.id">
+                  <img :src="item.imgUrl" :alt="item.imgName">
+                </el-carousel-item>
+              </el-carousel>
+            </el-col>
+          </el-row>
         </template>
       </el-drawer>
     </el-card>
@@ -104,6 +127,7 @@ import {
   reqRemoveSkuInfo,
   reqCancelSaleSku,
   reqOnSaleSku,
+  reqGetSkuInfo
 } from "@/api/product/sku/index";
 import { SkuData } from "@/api/product/sku/type";
 import { ElMessage } from "element-plus";
@@ -111,7 +135,10 @@ import { ElMessage } from "element-plus";
 //SKU商品详情展示抽屉
 
 //控制抽屉的显示
-let drawer = ref<boolean>(false)
+let drawer = ref<boolean>(false);
+
+//获取的SKU详情数据
+let skuInfo = ref<SkuData>({})
 
 //分页器
 
@@ -197,10 +224,19 @@ const updateSaleSku = async (row: SkuData) => {
 };
 
 //进入SKU详情页面的回调函数
-const getDetails = () => {
+const getDetails = async(skuId:number) => {
   //切换
-  drawer.value = !drawer.value
-}
+  drawer.value = !drawer.value;
+
+  //获取Sku详情
+  const result = await reqGetSkuInfo(skuId)
+  if(result.code == 200){
+    skuInfo.value = result.data 
+  }
+  console.log(result);
+};
+
+
 //当组件挂载时发送一个获取已有SKU数据的请求
 onMounted(() => {
   getHasSpu();
@@ -212,4 +248,22 @@ export default {
   name: "SKU",
 };
 </script>
-<style scoped></style>
+<style scoped lang="scss">
+.el-carousel__item img {
+  color: #475669;
+  opacity: 0.75;
+  line-height: 200px;
+  margin: 0;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n + 1) {
+  background-color: #d3dce6;
+}
+</style>
