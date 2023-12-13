@@ -4,11 +4,11 @@
     <el-card>
       <el-form inline class="form">
         <el-form-item label="用户名:"
-          ><el-input placeholder="请输入用户名"></el-input
+          ><el-input placeholder="请输入用户名" v-model="keyWord"></el-input
         ></el-form-item>
         <el-form-item>
-          <el-button type="primary">搜索</el-button>
-          <el-button>重置</el-button>
+          <el-button type="primary" :disabled="!keyWord" @click="seacrh">搜索</el-button>
+          <el-button @click="resetSearch" >重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -190,6 +190,20 @@ import {
 } from "@/api/acl/user/type";
 import { ElMessage, ElMessageBox } from "element-plus";
 
+//搜索功能相关数据定义
+let keyWord = ref<string>('')
+
+//搜索按钮的回调函数
+const seacrh = () => {
+  //调用获取用户列表方法
+  getUserList()
+}
+//搜索重置按钮的回调
+const resetSearch = () => {
+  //清空keyWord数据
+  keyWord.value = ''
+  getUserList()
+}
 //分页器
 
 //当前页码
@@ -228,7 +242,7 @@ let userParams = ref<userData>({
 //获取管理用户分页列表
 const getUserList = async (pager = 1) => {
   pageNo.value = pager;
-  const result: userResponseData = await reqUser(pageNo.value, pageSize.value);
+  const result: userResponseData = await reqUser(pageNo.value, pageSize.value,keyWord.value);
   if (result.code == 200) {
     userList.value = result.data.records;
     total.value = result.data.total;

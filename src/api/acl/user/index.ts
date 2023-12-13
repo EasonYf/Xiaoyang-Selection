@@ -20,8 +20,8 @@ enum API {
 }
 
 //获取管理用户分页列表
-export const reqUser = (page: number, limit: number) =>
-  request.get<any, userResponseData>(API.GETUSERLIST_URL + `${page}/${limit}`);
+export const reqUser = (page: number, limit: number,username:string) =>
+  request.get<any, userResponseData>(API.GETUSERLIST_URL + `${page}/${limit}?username=${username}`);
 
 //删除一个用户的请求接口
 export const reqRemoveUser = (userId: number) =>
