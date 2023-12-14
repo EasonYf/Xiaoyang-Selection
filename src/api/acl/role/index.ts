@@ -13,7 +13,7 @@ enum API {
 }
 
 //获取角色分页列表数据
-export const reqRoleList = (page:number,limit:number) => request.get<any,RoleInfoResponseData>(API.ROLELIST_URL + `${page}/${limit}`)
+export const reqRoleList = (page:number,limit:number,keyword:string) => request.get<any,RoleInfoResponseData>(API.ROLELIST_URL + `${page}/${limit}?roleName=${keyword}`)
 
 //新增某个角色或者修改某个角色的请求接口
 export const reqAddOrUpdateRole = (data:any) => {
