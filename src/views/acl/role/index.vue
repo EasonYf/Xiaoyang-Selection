@@ -3,10 +3,12 @@
   <el-card>
     <el-form class="form">
       <el-form-item label="角色名称"
-        ><el-input placeholder="角色名称"  v-model="keyWord"></el-input
+        ><el-input placeholder="角色名称" v-model="keyWord"></el-input
       ></el-form-item>
       <el-form-item>
-        <el-button type="primary" :disabled="!keyWord" @click="seacrh" >搜索</el-button>
+        <el-button type="primary" :disabled="!keyWord" @click="seacrh"
+          >搜索</el-button
+        >
         <el-button @click="resetSearch">重置</el-button>
       </el-form-item>
     </el-form>
@@ -29,10 +31,20 @@
       <el-table-column label="更新时间" prop="createTime"></el-table-column>
       <el-table-column label="操作" width="300px" align="center">
         <template #="{ row }">
-          <el-button icon="User" type="primary" size="small"
+          <el-button
+            icon="User"
+            type="primary"
+            size="small"
+            @click="assignRole(row)"
             >分配权限</el-button
           >
-          <el-button icon="Edit" type="primary" size="small" @click="updateRole(row)">编辑</el-button>
+          <el-button
+            icon="Edit"
+            type="primary"
+            size="small"
+            @click="updateRole(row)"
+            >编辑</el-button
+          >
           <el-popconfirm
             title="确定要删除该角色吗?"
             @confirm="removeRole(row.id)"
@@ -80,12 +92,46 @@
       </span>
     </template>
   </el-dialog>
+  <!-- 分配权限的drawer组件 -->
+  <el-drawer v-model="drawer">
+    <template #header>
+      <h4>权限分配</h4>
+    </template>
+    <template #default>
+      <!-- 树型选择器 -->
+      <el-tree
+        :data="RoleParams"
+        show-checkbox
+        node-key="id"
+        :default-expanded-keys="[2, 3]"
+        :default-checked-keys="[5]"
+        :props="defaultProps"
+        default-expand-all
+      />
+    </template>
+    <template #footer>
+      <div style="flex: auto">
+        <el-button @click="AssignCancel">取消</el-button>
+        <el-button type="primary" @click="AssignConfirm">确定</el-button>
+      </div>
+    </template>
+  </el-drawer>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { reqRoleList, reqRemoveRole ,reqAddOrUpdateRole} from "@/api/acl/role/index";
-import type { RoleInfoResponseData, RoleList, Role } from "@/api/acl/role/type";
+import {
+  reqRoleList,
+  reqRemoveRole,
+  reqAddOrUpdateRole,
+  reqRoleLimit,
+} from "@/api/acl/role/index";
+import type {
+  RoleInfoResponseData,
+  RoleList,
+  Role,
+  MenuData,
+} from "@/api/acl/role/type";
 import { ElMessage } from "element-plus";
 //当前的页码
 let pageNo = ref<number>(1);
@@ -98,14 +144,25 @@ let roleInfo = ref<Role>({
   roleName: "",
 });
 //获取添加角色表单的组件实例
-let roleFormRef = ref()
+let roleFormRef = ref();
+// 控制分配权限drawer的显示
+let drawer = ref<boolean>(false);
+//控制树型选择器默认配置
+const defaultProps = {
+  children: 'children',
+  label: 'name',
+}
+// 选择的权限ID
+const selectMenuId = ref<number[]>([])
+// 定义角色权限的数据对象
+const RoleParams = ref<MenuData[]>([]);
 //控制新增角色的dialog
 const dialogVisible = ref<boolean>(false);
 //已有角色的数据列表
 const roleList = ref<RoleList>([]);
 // 添加角色的表单验证
 const addRoleRule = ref({
-  id:0,
+  id: 0,
   roleName: [
     { required: true, message: "Please input roleName", trigger: "blur" },
   ],
@@ -120,19 +177,19 @@ const handleSizeChange = () => {
   getHasRoleList();
 };
 //搜索功能相关数据定义
-let keyWord = ref<string>('')
+let keyWord = ref<string>("");
 
 //搜索按钮的回调函数
 const seacrh = () => {
   //调用获取用户列表方法
- getHasRoleList()
-}
+  getHasRoleList();
+};
 //搜索重置按钮的回调
 const resetSearch = () => {
   //清空keyWord数据
-  keyWord.value = ''
-  getHasRoleList()
-}
+  keyWord.value = "";
+  getHasRoleList();
+};
 
 //获取角色列表的数据
 const getHasRoleList = async (pager = 1) => {
@@ -142,7 +199,6 @@ const getHasRoleList = async (pager = 1) => {
     pageSize.value,
     keyWord.value
   );
-  console.log(result);
 
   if (result.code == 200) {
     roleList.value = result.data.records;
@@ -174,51 +230,73 @@ const addRole = () => {
 };
 //新增角色的保存按钮回调函数
 const addSave = () => {
-  roleFormRef.value.validate(async(val:boolean) => {
+  roleFormRef.value.validate(async (val: boolean) => {
     // 如果表单验证没有通过
-    if(!val) return
+    if (!val) return;
     //通过则发送添加角色的请求
-    const result = await reqAddOrUpdateRole(roleInfo.value)
-    if(result.code == 200){
+    const result = await reqAddOrUpdateRole(roleInfo.value);
+    if (result.code == 200) {
       ElMessage({
-        type:'success',
-        message:roleInfo.value.id?'更新成功':'添加成功'
-      })
+        type: "success",
+        message: roleInfo.value.id ? "更新成功" : "添加成功",
+      });
       //关闭dialog
-      dialogVisible.value = false
+      dialogVisible.value = false;
       //成功后重新获取角色页面
-      getHasRoleList(1)
-    }else{
+      getHasRoleList(1);
+    } else {
       ElMessage({
-        type:'error',
-        message:roleInfo.value.id?'更新失败':'添加失败'
-      })
+        type: "error",
+        message: roleInfo.value.id ? "更新失败" : "添加失败",
+      });
     }
-  })
+  });
 };
 // 关闭添加页面或者修改页面清空dialog的回调
 const closeDialog = () => {
   // 重置表单验证
-  roleFormRef.value.resetFields()
+  roleFormRef.value.resetFields();
   // 清空roleInfo的数据
-  Object.assign(roleInfo.value,{
-    id:'',
-    roleName:''
-  })
-}
+  Object.assign(roleInfo.value, {
+    id: "",
+    roleName: "",
+  });
+};
 //新增角色的取消按钮回调函数
 const addCancel = () => {
   dialogVisible.value = false;
 };
 
 //更新角色按钮的回调
-const updateRole = (row:Role) => {
-  Object.assign(roleInfo.value,{
-    id:row.id,
-    roleName:row.roleName
-  })
-  dialogVisible.value = true
-}
+const updateRole = (row: Role) => {
+  Object.assign(roleInfo.value, {
+    id: row.id,
+    roleName: row.roleName,
+  });
+  dialogVisible.value = true;
+};
+
+// 分配权限取消按钮的回调函数
+const AssignCancel = () => {
+  drawer.value = false;
+};
+
+// 分配权限确定按钮的回调函数
+const AssignConfirm = () => {};
+
+// 分配权限按钮的回调函数
+const assignRole = async (row: Role) => {
+ 
+  // 发送请求
+  const result = await reqRoleLimit(row.id as number);
+  console.log(result);
+
+  if (result.code == 200) {
+    RoleParams.value = result.data;
+  }
+  
+  drawer.value = true;
+};
 onMounted(() => {
   getHasRoleList();
 });
