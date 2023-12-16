@@ -40,11 +40,11 @@ import Main from "@/layout/main/index.vue";
 import Tabbar from "@/layout/tabbar/index.vue";
 import { useRoute } from "vue-router";
 import useLayOutSettingStore from "@/store/modules/setting/setting";
+
 let settingStore = useLayOutSettingStore();
 
 let $route = useRoute();
 let userStore = useUserStore();
-
 
 </script>
 <script lang="ts">

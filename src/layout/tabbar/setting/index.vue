@@ -11,15 +11,15 @@
         <FullScreen />
       </el-icon>
     </el-button>
-    <el-button size="default" circle>
+    <el-button size="default" circle @click="setTheme">
       <el-icon>
         <Setting />
       </el-icon>
     </el-button>
-    <el-avatar icon="UserFilled" :size="40" :src="userStore.avatar"/>
+    <el-avatar icon="UserFilled" :size="40" :src="userStore.avatar" />
     <el-dropdown>
       <span class="el-dropdown-link">
-       {{userStore.username}}
+        {{ userStore.username }}
         <el-icon class="el-icon--right">
           <arrow-down />
         </el-icon>
@@ -33,48 +33,99 @@
       </template>
     </el-dropdown>
   </div>
+  <!-- 主题设置的抽屉 -->
+  <el-drawer v-model="drawer" append-to-body size="250">
+    <template #header>
+      <h4>主题设置</h4>
+    </template>
+    <template #default>
+      <el-form>
+        <el-form-item label="主题颜色"
+          ><el-color-picker v-model="themeColor" show-alpha @change="setColor"
+        /></el-form-item>
+        <el-form-item label="模式切换">
+          <el-switch
+            ref="switchThme"
+            v-model="value1"
+            class="mt-2"
+            size="large"
+            style="margin-left: 24px"
+            inline-prompt
+            active-icon="Sunny"
+            inactive-icon="Moon"
+            @change="changeTheme"
+          />
+        </el-form-item>
+      </el-form>
+    </template>
+  </el-drawer>
 </template>
 
 <script setup lang="ts">
-import useLayOutSettingStore from '@/store/modules/setting/setting'
-import useUserStore from '@/store/modules/user';
-import { useRoute , useRouter} from 'vue-router';
-
-let LauOutSettingStore = useLayOutSettingStore()
-let userStore = useUserStore()
-let $router = useRouter()
-let $route = useRoute()
-
-
+import useLayOutSettingStore from "@/store/modules/setting/setting";
+import useUserStore from "@/store/modules/user";
+import { useRoute, useRouter } from "vue-router";
+import { ref } from "vue";
+let LauOutSettingStore = useLayOutSettingStore();
+let userStore = useUserStore();
+let $router = useRouter();
+let $route = useRoute();
+// switch的组件实例
+let switchThme = ref();
+// 控制暗黑模式
+let value1 = ref<boolean>(false);
+// 主题颜色
+let themeColor = ref();
+// 控制设置主题的抽屉
+let drawer = ref<boolean>(false);
+// theme改变的回调
+const changeTheme = () => {
+  let html = document.documentElement;
+  value1.value ? (html.className = "dark") : (html.className = "");
+};
 // 刷新按钮点击的回调
 const settingRefresh = () => {
-  LauOutSettingStore.refresh = !LauOutSettingStore.refresh
-}
+  LauOutSettingStore.refresh = !LauOutSettingStore.refresh;
+};
 // 全屏按钮点击的回调函数
 const fullScreen = () => {
-  let full = document.fullscreenElement
-  if(!full){
+  let full = document.fullscreenElement;
+  if (!full) {
     //如果不是全屏，调用文档根节点方法requestFullScreen方法
-    document.documentElement.requestFullscreen()
-  }else{
+    document.documentElement.requestFullscreen();
+  } else {
     //如果是全面，调用exitFullScreen方法，退出全面
-    document.exitFullscreen()
+    document.exitFullscreen();
   }
-}
+};
+// 切换主题按钮的回调
+const setTheme = () => {
+  drawer.value = true;
+};
+// 当主题颜色发生改变时的回调
+const setColor = () => {
+  const el = document.documentElement;
+  // const el = document.getElementById('xxx')
 
+  // 获取 css 变量
+  getComputedStyle(el).getPropertyValue(`--el-color-primary`);
+
+  // 设置 css 变量
+  el.style.setProperty("--el-color-primary", themeColor.value);
+};
 //退出登录的回调
-const loginOut = async() => {
+const loginOut = async () => {
   //第一步：向服务器发送退出登录请求
   //第二步：仓库中与用户相关的数据清空
   //第三步：跳转login路由
-  await userStore.userLoginOut()
+  await userStore.userLoginOut();
   $router.push({
-    path:'/login',
-    query:{
-      redirect: $route.path
-    }
-  })
-}
+    path: "/login",
+    query: {
+      redirect: $route.path,
+    },
+  });
+};
 </script>
 <script lang="ts">
 export default {

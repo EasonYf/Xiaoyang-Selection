@@ -7,6 +7,8 @@ import "element-plus/dist/index.css";
 //svg需要的配置代码
 import 'virtual:svg-icons-register'
 import GloablComponent from '@/components/index'
+//暗黑模式的样式
+import 'element-plus/theme-chalk/dark/css-vars.css'
 //引入全局的样式
 import '@/styles/index.scss'
 import router from "./router";

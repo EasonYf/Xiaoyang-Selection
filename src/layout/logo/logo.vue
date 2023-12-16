@@ -1,17 +1,20 @@
 <template>
   <div class="logo_container" v-show="setting.logoHidden">
     <img :src = "setting.url" alt="">
-    <p>{{setting.title}}</p>
+    <p v-show="!LayOutSettingStore.fold">{{setting.title}}</p>
   </div>
 </template>
 
 <script setup lang="ts">
 import setting from '@/setting';
+import useLayOutSettingStore from '@/store/modules/setting/setting';
+
+let LayOutSettingStore = useLayOutSettingStore()
 </script>
 
 <style scoped lang="scss">
 .logo_container {
-  width: $base-menu-width;
+ 
   display: flex;
   color: #fff;
   position: relative;
@@ -29,6 +32,9 @@ import setting from '@/setting';
     width: 40px;
     height: 40px;
     background-size: cover;
+  }
+  .textHidden {
+    transform: translateX(-400px);
   }
 }
 </style>
