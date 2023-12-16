@@ -10,7 +10,7 @@ export interface ResponseData {
 
 export interface Role {
   createTime?: string;
-  id?: number;
+  id?: number|string;
   remark?: null;
   roleName: string;
   updateTime?: string;

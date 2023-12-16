@@ -93,18 +93,19 @@
     </template>
   </el-dialog>
   <!-- 分配权限的drawer组件 -->
-  <el-drawer v-model="drawer">
+  <el-drawer v-model="drawer" @close="closeDrawer">
     <template #header>
       <h4>权限分配</h4>
     </template>
     <template #default>
       <!-- 树型选择器 -->
       <el-tree
+        ref="tree"
         :data="RoleParams"
         show-checkbox
         node-key="id"
         :default-expanded-keys="[2, 3]"
-        :default-checked-keys="[5]"
+        :default-checked-keys="selectMenuId"
         :props="defaultProps"
         default-expand-all
       />
@@ -120,11 +121,13 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
+import useUserStore  from "@/store/modules/user";
 import {
   reqRoleList,
   reqRemoveRole,
   reqAddOrUpdateRole,
   reqRoleLimit,
+  reqAssignRole,
 } from "@/api/acl/role/index";
 import type {
   RoleInfoResponseData,
@@ -133,6 +136,8 @@ import type {
   MenuData,
 } from "@/api/acl/role/type";
 import { ElMessage } from "element-plus";
+// 使用用户仓库
+const userStore = useUserStore()
 //当前的页码
 let pageNo = ref<number>(1);
 //当前页显示条数
@@ -141,6 +146,7 @@ let pageSize = ref<number>(5);
 let total = ref<number>(0);
 //角色信息
 let roleInfo = ref<Role>({
+  id: "",
   roleName: "",
 });
 //获取添加角色表单的组件实例
@@ -149,11 +155,13 @@ let roleFormRef = ref();
 let drawer = ref<boolean>(false);
 //控制树型选择器默认配置
 const defaultProps = {
-  children: 'children',
-  label: 'name',
-}
+  children: "children",
+  label: "name",
+};
+// 获得树型选择器的组件实例
+let tree = ref();
 // 选择的权限ID
-const selectMenuId = ref<number[]>([])
+const selectMenuId = ref<number[]>([]);
 // 定义角色权限的数据对象
 const RoleParams = ref<MenuData[]>([]);
 //控制新增角色的dialog
@@ -282,20 +290,71 @@ const AssignCancel = () => {
 };
 
 // 分配权限确定按钮的回调函数
-const AssignConfirm = () => {};
+const AssignConfirm = async () => {
+  // 获得全选的节点数组
+  const arr = tree.value.getCheckedKeys();
+  // 获得半选的节点数组
+  const arr1 = tree.value.getHalfCheckedKeys();
+  const newArr = arr.concat(arr1);
+
+  //发送请求
+  const result = await reqAssignRole(roleInfo.value.id as number, newArr);
+  if (result.code == 200) {
+    ElMessage({
+      type: "success",
+      message: "分配权限成功",
+    });
+    //关闭drawer
+    drawer.value = false;
+    //如果修改了当前用户所在角色权限，将重新刷新
+    let reset = userStore.roles.find(item => {
+      return item === roleInfo.value.roleName
+    })
+    //如果存在reset,则刷新页面
+    if(reset){
+      window.location.reload()
+    }
+  } else {
+    ElMessage({
+      type: "error",
+      message: "分配失败",
+    });
+  }
+};
 
 // 分配权限按钮的回调函数
 const assignRole = async (row: Role) => {
- 
+  //保存角色信息
+  Object.assign(roleInfo.value, {
+    id: row.id,
+    roleName: row.roleName,
+  });
   // 发送请求
   const result = await reqRoleLimit(row.id as number);
   console.log(result);
 
   if (result.code == 200) {
     RoleParams.value = result.data;
+    selectMenuId.value = filterArr(RoleParams.value, []);
   }
-  
   drawer.value = true;
+};
+
+// 筛选已选中的权限的Id
+const filterArr = (allData: any, initArr: any) => {
+  allData.forEach((el: any) => {
+    if (el.select && el.level == 4) {
+      initArr.push(el.id);
+    }
+    if (el.children && el.children.length > 0) {
+      filterArr(el.children, initArr);
+    }
+  });
+  return initArr;
+};
+// 当分配权限drawer抽屉关闭时触发的回调函数
+const closeDrawer = () => {
+  selectMenuId.value = [];
 };
 onMounted(() => {
   getHasRoleList();

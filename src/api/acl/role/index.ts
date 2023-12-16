@@ -12,6 +12,8 @@ enum API {
   DELETEROLE_URL = "/admin/acl/role/remove/",
   //获取全部的角色权限数据
   ASSIGNROLE_URL = "/admin/acl/permission/toAssign/",
+  //给角色分配权限
+  TODOASSIGNROLE_URL = "/admin/acl/permission/doAssign?",
 }
 
 //获取角色分页列表数据
@@ -38,3 +40,9 @@ export const reqRemoveRole = (roleId: number) =>
 //获取角色的全部权限信息的接口
 export const reqRoleLimit = (roleId: number) =>
   request.get<any, MenuRepsonseData>(API.ASSIGNROLE_URL + roleId);
+
+//给角色分配权限的请求接口
+export const reqAssignRole = (roleId: number, permissionId: number[]) =>
+  request.post<any, any>(
+    API.TODOASSIGNROLE_URL + `roleId=${roleId}&permissionId=${permissionId}`
+  );

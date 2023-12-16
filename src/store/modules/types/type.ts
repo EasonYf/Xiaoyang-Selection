@@ -7,6 +7,7 @@ export interface UserState {
   menuRoutes: RouteRecordRaw[];
   username: string;
   avatar: string;
+  roles:string[]
 }
 
 //定义catagory中的state数据类型
