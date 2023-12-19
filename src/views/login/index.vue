@@ -125,7 +125,7 @@ const loginRule = {
     height: 80%;
    
     border-radius: 20px;
-    box-shadow: 10px 10px 20px rgba(0,0,0,0.5);
+    box-shadow: 10px 10px 20px rgba(0,0,0,0.25);
     .login_left {
       display: flex;
       text-align: center;
@@ -155,10 +155,12 @@ const loginRule = {
         padding: 15px;
 
         h1 {
+          color: #181441;
           font-size: 40px;
           margin: 10px;
         }
         h2 {
+          color: #181441;
           font-size: 26px;
           margin: 10px;
         }

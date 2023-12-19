@@ -40,7 +40,7 @@ export default defineConfig(({ command, mode }) => {
         [env.VITE_APP_BASE_API]: {
           target: env.VITE_SERVE,
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api/,''),
+          rewrite: (path) => path.replace(/^\/api/, ""),
         },
       },
     },

@@ -30,7 +30,8 @@ let useUserStore = defineStore("user", {
       if (result.code == 200) {
         //本地存储持久化一份 存储token
         console.log('这是user信息',result);
-        
+        //mock登录时
+        // this.token = result.data.token
         this.token = result.data as string;
         SET_TOKEN(result.data as string);
         return "ok";

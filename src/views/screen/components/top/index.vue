@@ -5,22 +5,37 @@
     </div>
     <div class="center"><span>智慧旅游可视化大数据平台</span></div>
     <div class="right">
-      <span class="rbtn">数据报告</span
-      ><span class="time">当前时间:2023年12月16日</span>
+      <span class="rbtn">数据报告</span><span class="times">当前时间:{{ time }}</span>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useRouter } from "vue-router";
-
+import moment from "moment";
 //获得路由器的组件实例
 let $router = useRouter();
+//设置时间变量
+let time = ref(moment().format("YYYY年MM月DD日 hh:mm:ss"));
+let timer = ref(0);
+
+//获取当前时间
 
 //跳转首页按钮的回调函数
 const goHome = () => {
-  $router.push('/home')
-}
+  $router.push("/home");
+};
+
+onMounted(() => {
+  timer.value = setInterval(() => {
+    time.value = moment().format("YYYY年MM月DD日 hh:mm:ss");
+  }, 1000);
+});
+
+onBeforeUnmount(()=>{
+  clearInterval(timer.value)
+})
 </script>
 <script lang="ts">
 export default {
@@ -63,6 +78,11 @@ export default {
       font-size: 20px;
       cursor: pointer;
       background: url("../../images/dataScreen-header-btn-bg-r.png") no-repeat;
+    }
+    .times {
+      height: 40px;
+      line-height: 40px;
+      font-size: 20px;
     }
   }
   .center {

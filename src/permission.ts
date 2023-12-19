@@ -37,8 +37,8 @@ router.beforeEach(async (to, from, next) => {
           //token过期：获取不到用户信息
           //用户手动修改本地token
           //退出登录
-          await userStore.userLoginOut()
-          next({path:'/login',query:{redirect:to.path}})
+          await userStore.userLoginOut();
+          next({ path: "/login", query: { redirect: to.path } });
         }
       }
     }
@@ -56,7 +56,7 @@ router.beforeEach(async (to, from, next) => {
 
 router.afterEach((to, from) => {
   //设置成功后的页面title
-  document.title = `${setting.title}-${to.meta.title}`
+  document.title = `${setting.title}-${to.meta.title}`;
   nprogress.done();
   // to and from are both route objects.
 });
