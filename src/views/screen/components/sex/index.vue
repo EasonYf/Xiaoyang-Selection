@@ -93,7 +93,7 @@ export default {
   margin: 20px 0;
   width: 100%;
   height: 100%;
-  background: url(../../images/dataScreen-main-cb.png) no-repeat;
+  background: url(../../images/dataScreen-main-lc.png) no-repeat;
   background-size: 100% 100%;
   .top {
     .title {
@@ -113,7 +113,9 @@ export default {
     justify-content: space-evenly;
 
     color: #29fcff;
+    margin-top: 20px;
     .man {
+      
       margin-left: 35px;
       flex-direction: column;
       width: 111px;

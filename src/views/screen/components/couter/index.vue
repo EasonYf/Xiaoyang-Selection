@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div class="top">
-      <p class="title">年度游客量对比</p>
+      <p class="title">预约渠道数据统计</p>
       <p class="bg"></p>
     </div>
     <div class="charts" ref="charts"></div>
@@ -12,64 +12,57 @@
 import { ref, onMounted } from "vue";
 import * as echarts from "echarts";
 let charts = ref();
+
 onMounted(() => {
   //一个容器可以同时展示多种类型的图形图标
   let mychart = echarts.init(charts.value);
-  //设置配置项
   mychart.setOption({
     title: {
-      text: "散点图",
-      left: "40%",
+      text: "游客消费统计",
       textStyle: {
         color: "white",
       },
     },
-    xAxis: {
-      type: "category",
-      show: true,
-    },
-    yAxis: {
-      show: false,
-    },
-    grid: {
-      left: 20,
-      top: 20,
-      right: 0,
-      bottom: 20,
-    },
-    series: {
-      type: "scatter",
-      data: [
-        33, 88, 21, 9, 88, 234, 113, 1231, 674, 3, 88, 33, 21, 888, 3332, 313,
-        123, 5, 657, 7,
+    radar: {
+      // shape: 'circle',
+      indicator: [
+        { name: "消费", max: 6500 },
+        { name: "好感", max: 16000 },
+        { name: "出行", max: 30000 },
+        { name: "小吃", max: 38000 },
+        { name: "爱好", max: 52000 },
+        { name: "景点", max: 25000 },
       ],
-      //标记图形设置
-      symbol: "pin",
-      symbolSize: 16,
-      //图文标签
-      label: {
-        show: true,
-        position: "top",
-        color: "#fff",
-      },
-      //散点图标记的颜色
-      itemStyle: {
-        color: 'cyan'
-      },
     },
+    series: [
+      {
+        name: "Budget vs spending",
+        type: "radar",
+        data: [
+          {
+            value: [4200, 3000, 20000, 35000, 50000, 18000],
+            name: "购物",
+          },
+          {
+            value: [5000, 14000, 28000, 26000, 42000, 21000],
+            name: "吃饭",
+          },
+        ],
+      },
+    ],
   });
 });
 </script>
 <script lang="ts">
 export default {
-  name: "Year",
+  name: "Counter",
 };
 </script>
 <style scoped lang="scss">
 .box {
   width: 100%;
   height: 100%;
-  background: url(../../images/dataScreen-main-rc.png) no-repeat;
+  background: url(../../images/dataScreen-main-rb.png) no-repeat;
   background-size: 100% 100%;
   margin: 20px 0px;
   .top {

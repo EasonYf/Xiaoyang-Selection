@@ -100,7 +100,6 @@ export default {
   background: url(../../images/dataScreen-main-cb.png) no-repeat;
   background-size: 100% 100%;
   color: #fff;
-  margin: 0 20px;
   .top {
     .title {
       font-size: 20px;

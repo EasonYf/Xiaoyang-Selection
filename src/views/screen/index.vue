@@ -16,7 +16,9 @@
           <Line class="line"></Line>
         </div>
         <div class="right">
-          <ScenicRank class="ScenicRank"></ScenicRank>
+          <ScenicRank class="scenicRank"></ScenicRank>
+          <Year class="year"></Year>
+          <Couter class="couter"></Couter>
         </div>
       </div>
     </div>
@@ -32,6 +34,8 @@ import Sex from "./components/sex/index.vue";
 import ChinaMap from "./components/map/index.vue";
 import Line from "./components/line/index.vue";
 import ScenicRank from "./components/rank/index.vue";
+import Year from "./components/year/index.vue"
+import Couter from "./components/couter/index.vue"
 // 获取screen组件实例
 let screen = ref();
 
@@ -89,6 +93,7 @@ export default {
         flex: 2;
         display: flex;
         flex-direction: column;
+        margin: 0 20px;
         .map {
           flex: 3;
         }
@@ -99,9 +104,15 @@ export default {
       .right {
         flex: 1;
         display: flex;
-        .ScenicRank {
+        flex-direction: column;
+        .scenicRank {
           flex:1;
-          background-color: red;
+        }
+        .year {
+          flex:1;
+        }
+        .couter {
+          flex:1;
         }
       }
     }
