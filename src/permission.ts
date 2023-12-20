@@ -57,6 +57,7 @@ router.beforeEach(async (to, from, next) => {
 });
 //后置路由守卫
 
+//@ts-ignore
 router.afterEach((to, from) => {
   //设置成功后的页面title
   document.title = `${setting.title}-${to.meta.title}`;
