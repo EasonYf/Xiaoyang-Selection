@@ -121,7 +121,7 @@ import {
   TrademarkResponseData,
   Trademark,
 } from "@/api/product/trademark/type";
-import { ElMessage, FormRules, UploadFile, UploadProps } from "element-plus";
+import { ElMessage, FormRules, UploadProps } from "element-plus";
 //当前页
 let currentPage = ref<number>(1);
 let total = ref<number>(0);
@@ -190,7 +190,6 @@ const updateTrademark = (row: Trademark) => {
 //上传图片组件钩子-> 上传文件成功后
 const handleAvatarSuccess: UploadProps["onSuccess"] = (
   response: any,
-  uploadFile: UploadFile
 ) => {
   //保存上传成功后的图片地址
   trademarkForm.logoUrl = response.data;
@@ -225,7 +224,7 @@ const beforeAvatarUpload: UploadProps["beforeUpload"] = (rawFile: any) => {
 };
 
 //表单验证
-const logoRule = (rule: any, value: any, callback: any) => {
+const logoRule = (value: any, callback: any) => {
   //如果图片上传
   console.log("这是图片的表单验证", value);
 
