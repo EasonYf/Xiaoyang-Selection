@@ -26,13 +26,16 @@ router.beforeEach(async (to, from, next) => {
     } else {
       //如果每次切换路由时username存在（即用户基本信息存在），就不用发送userInfo请求
       if (username) {
+        
         next();
       } else {
         //如果没有用户信息
         try {
           //发送获取用户信息请求
           await userStore.userInfo();
-          next();
+          // 解决刷新异步路由跳转空白页面的情况 ： 因为可能在加载异步路由的时候，获取完用户信息后路由还没有加载完毕，所有会出现空白页面
+
+          next({...to,replace:true});
         } catch (error) {
           //token过期：获取不到用户信息
           //用户手动修改本地token

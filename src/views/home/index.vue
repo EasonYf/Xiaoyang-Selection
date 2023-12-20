@@ -10,11 +10,4 @@ export default {
 }
 </script>
 <style scoped lang="scss">
-.home {
-  width: 100%;
-  height: 80vh;
-  background: url("@/assets/images/bg01.jpg") no-repeat;
-  background-size: contain;
-  // z-index: -1;
-}
 </style>

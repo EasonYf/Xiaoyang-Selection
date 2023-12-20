@@ -1,5 +1,4 @@
-//常量路由
-
+// 静态路由（常量路由）
 export const constantRoute = [
   {
     //登录路由
@@ -59,6 +58,11 @@ export const constantRoute = [
       icon: "DocumentDelete",
     },
   },
+];
+
+// 动态路由 （异步路由）
+
+export const asyncRoute = [
   {
     //权限管理路由
     path: "/acl",
@@ -124,6 +128,7 @@ export const constantRoute = [
         name: "Trademark",
         meta: {
           title: "品牌管理",
+          hidden: false,
           icon: "ShoppingCartFull",
         },
       },
@@ -143,6 +148,7 @@ export const constantRoute = [
         meta: {
           title: "SPU管理",
           icon: "ShoppingCartFull",
+          hidden: false,
         },
       },
       {
@@ -152,19 +158,22 @@ export const constantRoute = [
         meta: {
           title: "SKU管理",
           icon: "ShoppingCartFull",
+          hidden: false,
         },
       },
     ],
   },
-  {
-    //任意路由
-    path: "/:pathMatch(.*)*",
-    redirect: "/404",
-    name: "Any",
-    meta: {
-      title: "any",
-      hidden: true,
-      icon: "Share",
-    },
-  },
 ];
+
+// 任意路由
+export const anyRoute = {
+  //任意路由
+  path: "/:pathMatch(.*)*",
+  redirect: "/404",
+  name: "Any",
+  meta: {
+    title: "any",
+    hidden: true,
+    icon: "Share",
+  },
+};

@@ -2,7 +2,7 @@
   <!-- 卡片视图 -->
   <el-card class="box-card">
     <!-- 添加品牌按钮 -->
-    <el-button type="primary" icon="Plus" @click="addTrademark"
+    <el-button type="primary" icon="Plus" @click="addTrademark" v-has="'btn.Trademark.add'"
       >添加品牌</el-button
     >
     <!-- table表格区域 -->
@@ -36,12 +36,16 @@
             @click="updateTrademark(row)"
           ></el-button>
           <!-- 删除按钮 -->
-          <el-popconfirm title="Are you sure to delete this?" width="180px" icon="Delete" @confirm="deleteTrademark(row)">
+          <el-popconfirm
+            title="Are you sure to delete this?"
+            width="180px"
+            icon="Delete"
+            @confirm="deleteTrademark(row)"
+          >
             <template #reference>
               <el-button icon="Delete" type="danger"></el-button>
             </template>
           </el-popconfirm>
-          
         </template>
       </el-table-column>
     </el-table>
@@ -110,7 +114,7 @@ import { ref, onMounted, reactive } from "vue";
 import {
   reqHasTrademark,
   reqAddOrUpdateTrademark,
-  reqDeleteTrademark
+  reqDeleteTrademark,
 } from "@/api/product/trademark/index";
 import {
   Records,
@@ -249,22 +253,24 @@ const clearFormData = () => {
 //删除品牌功能
 
 //确认删除品牌的回调函数
-const deleteTrademark = async (row:Trademark) => {
-  const result = await reqDeleteTrademark((row.id as number))
-  if(result.code == 200) {
+const deleteTrademark = async (row: Trademark) => {
+  const result = await reqDeleteTrademark(row.id as number);
+  if (result.code == 200) {
     ElMessage({
-      type:'success',
-      message:'删除成功'
-    })
+      type: "success",
+      message: "删除成功",
+    });
     //删除成功后重新发起数据列表请求，刷新table数据
-    getHasTrademark(tableData.value.length > 1 ? currentPage.value : currentPage.value - 1)
-  }else{
+    getHasTrademark(
+      tableData.value.length > 1 ? currentPage.value : currentPage.value - 1
+    );
+  } else {
     ElMessage({
-      type:'error',
-      message:'删除失败'
-    })
+      type: "error",
+      message: "删除失败",
+    });
   }
-}
+};
 onMounted(() => {
   getHasTrademark();
 });
