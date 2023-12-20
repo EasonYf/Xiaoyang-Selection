@@ -13,7 +13,7 @@ import setting from "./setting";
 //引入setting
 
 let userStore = useUserStore(pinia);
-
+//@ts-ignore
 router.beforeEach(async (to, from, next) => {
   // to and from are both route objects. must call `next`.
   let token = userStore.token;

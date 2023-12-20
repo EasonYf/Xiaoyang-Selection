@@ -2,7 +2,7 @@
 
 import request from "@/utlis/request";
 //引入类型
-import { CategoryResponseData, AttResponseData, AttrValue, Attr } from "./type";
+import { CategoryResponseData, AttResponseData, Attr } from "./type";
 enum API {
   CT1_URL = "/admin/product/getCategory1",
   CT2_URL = "/admin/product/getCategory2/",

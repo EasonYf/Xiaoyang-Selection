@@ -1,7 +1,7 @@
 //SKU管理业务相关的所有ts和请求定义
 import request from "@/utlis/request";
 
-import type { SkuData, SkuDataResponseData } from "./type";
+import type { SkuDataResponseData } from "./type";
 enum API {
   //获取已有的所有SKU数据(分页器获取数据的请求接口)
   SKUINFOLIST_URL = "/admin/product/list/",

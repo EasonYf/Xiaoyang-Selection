@@ -6,6 +6,7 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: constantRoute,
   //滚动行为
+  //@ts-ignore
   scrollBehavior (to, from, savedPosition) {
     return {
       left:0,
