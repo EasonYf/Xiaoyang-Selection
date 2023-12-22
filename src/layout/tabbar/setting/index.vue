@@ -1,5 +1,8 @@
 <template>
-  <div class="settings">
+  <div
+    class="settings"
+    :class="{ mydark: LauOutSettingStore.dark ? true : false }"
+  >
     <!-- 刷新按钮 -->
     <el-button size="default" circle @click="settingRefresh">
       <el-icon>
@@ -80,8 +83,9 @@ let themeColor = ref();
 let drawer = ref<boolean>(false);
 // theme改变的回调
 const changeTheme = () => {
+  LauOutSettingStore.dark = !LauOutSettingStore.dark;
   let html = document.documentElement;
-  value1.value ? (html.className = "dark") : (html.className = "");
+  value1.value ? (html.className = "dark mydark") : (html.className = "");
 };
 // 刷新按钮点击的回调
 const settingRefresh = () => {
@@ -106,6 +110,7 @@ const setTheme = () => {
 const setColor = () => {
   const el = document.documentElement;
   // const el = document.getElementById('xxx')
+  console.log(el);
 
   // 获取 css 变量
   getComputedStyle(el).getPropertyValue(`--el-color-primary`);
@@ -136,7 +141,14 @@ export default {
 .settings {
   display: flex;
   align-items: center;
-  margin-right: 20px;
+  // margin-right: 20px;
+  // border: 1px solid red;
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin-top: 20px;
+  background-color: #fff;
+  box-shadow: 1px 1px 2px 1px rgba($color: #000000, $alpha: 0.2);
+
 }
 .el-avatar {
   margin: 0 15px;

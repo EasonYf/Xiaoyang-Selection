@@ -1,5 +1,5 @@
 <template>
-  <div class="tabbar">
+  <div class="tabbar" id="tabbar">
     <div class="tabbar_left">
       <BreadCrumb></BreadCrumb>
     </div>
@@ -20,7 +20,6 @@ export default {
 </script>
 <style scoped lang="scss">
 .tabbar {
-  height: 100%;
   height: 100%;
   display: flex;
   justify-content: space-between;

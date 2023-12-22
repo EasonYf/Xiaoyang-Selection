@@ -2,18 +2,19 @@
   <div class="layout_container">
     <div
       class="layout_slider"
-      :class="{ flod: settingStore.fold ? true : false }"
+      :class="{
+        flod: settingStore.fold ? true : false,
+        mydark: settingStore.dark ? true : false,
+      }"
     >
       <logo></logo>
       <!-- 菜单 -->
       <el-scrollbar class="scrollbar">
         <el-menu
           :default-active="$route.path"
-          background-color="#001529"
-          text-color="#fff"
           router
           :collapse="settingStore.fold"
-          :collapse-transition="false"
+          :collapse-transition="true"
         >
           <Menu :menuList="userStore.menuRoutes" style="height: 50px"></Menu>
         </el-menu>
@@ -45,7 +46,6 @@ let settingStore = useLayOutSettingStore();
 
 let $route = useRoute();
 let userStore = useUserStore();
-
 </script>
 <script lang="ts">
 export default {
@@ -61,9 +61,11 @@ export default {
   .layout_slider {
     position: absolute;
     width: $base-menu-width;
-    height: 100vh;
-    background-color: $base-menu-bg-color;
-    color: #fff;
+    height: calc(100vh - 20px);
+    background-color:$base-menu-bg-color;
+    box-shadow: 1px 1px 2px 1px rgba($color: #000000, $alpha: 0.2);
+    margin: 10px 10px 0px 10px;
+    border-radius: 10px;
     transition: all 0.5s;
     word-break: keep-all;
     &.flod {
@@ -80,14 +82,14 @@ export default {
   .layout_nav {
     position: fixed;
     top: 0;
-    left: $base-menu-width;
-    width: calc(100% - $base-menu-width);
+    left: calc($base-menu-width + 20px);
+    width: calc(100% - $base-menu-width - 40px);
     height: $base-nav-height;
     transition: all 0.5s;
-    border-bottom: 1px solid rgba(0,0,0,0.1);
+
     &.flod {
-      width: calc(100vw - $base-menu-min-width);
-      left: $base-menu-min-width;
+      width: calc(100vw - $base-menu-min-width - 40px);
+      left: calc($base-menu-min-width + 20px);
     }
   }
 

@@ -16,7 +16,7 @@ let LayOutSettingStore = useLayOutSettingStore()
 .logo_container {
  
   display: flex;
-  color: #fff;
+  color: rgb(103, 157, 219);
   position: relative;
   justify-content: center;
   align-items: center;

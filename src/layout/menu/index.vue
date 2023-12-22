@@ -54,4 +54,10 @@ export default {
   name: "Menu",
 };
 </script>
-<style scoped></style>
+<style scoped lang="scss">
+.el-menu-item,
+.el-sub-menu
+ {
+  transition: all 0.5;
+}
+</style>
